@@ -1,0 +1,21 @@
+---
+import Navbar from "../components/Navbar.astro";
+import "../styles/global.css";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Dictionary</title>
+  </head>
+  <body class="max-w-4xl px-4 mx-auto">
+	<Navbar />
+    <main class="flex flex-col items-center justify-center min-h-screen">
+      <slot />
+    </main>
+  </body>
+</html>

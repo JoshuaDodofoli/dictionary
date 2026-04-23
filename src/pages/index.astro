@@ -1,18 +1,13 @@
 ---
-
+import PrimaryLayout from "../layouts/PrimaryLayout.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-		<p>This is astro</p>
-	</body>
-</html>
+<PrimaryLayout>
+  <h1 class="text-4xl font-bold mb-4">Welcome to Astro!</h1>
+  <p class="text-lg mb-6">
+    This is your new Astro project. Start building something amazing!
+  </p>
+  <a href="/about" class="text-blue-500 hover:underline"
+    >Learn more about Astro</a
+  >
+</PrimaryLayout>

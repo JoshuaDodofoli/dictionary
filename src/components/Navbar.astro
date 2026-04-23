@@ -1,0 +1,26 @@
+---
+import Book from "../components/icons/Book.astro";
+import ChevronDown from "./icons/Chevron-down.astro";
+
+
+---
+
+<nav class="w-full flex items-center justify-between p-4">
+   <div class="">
+    <Book class:list={[ "fill-blue-400" ]} />
+   </div>
+
+   <div class="flex gap-2">
+        <div class="flex items-center gap-1 cursor-pointer">
+            <select id="font-family" class="bg-amber-200 shadow-inner px-2 rounded-full">
+                 <option value="serif">Serif</option>
+                 <option value="sans-serif">Sans-serif</option>
+                 <option value="mono">mono</option>
+            </select>
+        </div>
+        <hr class="transform: rotate-90deg bg-black">
+        <div class="">
+            Mode
+        </div>
+   </div>
+</nav>
