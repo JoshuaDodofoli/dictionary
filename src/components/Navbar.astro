@@ -2,25 +2,43 @@
 import Book from "../components/icons/Book.astro";
 import ChevronDown from "./icons/Chevron-down.astro";
 
-
+const fonts = ["Serif", "Mono", "Sans-serif"];
 ---
 
 <nav class="w-full flex items-center justify-between p-4">
-   <div class="">
-    <Book class:list={[ "fill-blue-400" ]} />
-   </div>
+  <div class="">
+    <Book />
+  </div>
 
-   <div class="flex gap-2">
-        <div class="flex items-center gap-1 cursor-pointer">
-            <select id="font-family" class="bg-amber-200 shadow-inner px-2 rounded-full">
-                 <option value="serif">Serif</option>
-                 <option value="sans-serif">Sans-serif</option>
-                 <option value="mono">mono</option>
-            </select>
-        </div>
-        <hr class="transform: rotate-90deg bg-black">
-        <div class="">
-            Mode
-        </div>
-   </div>
+  <div class="flex gap-2">
+    <div id="font-btn"
+      class="flex relative px-2 py-1 items-center gap-1 cursor-pointer"
+    >
+      <div class="w-18">
+        <span class="">Serif</span>
+        <ul id="font-list"
+          class="absolute w-full -translate-x-2 mt-2 gap-1 flex flex-col"
+        >
+          {fonts.map((font) => <li class="bg-black text-white px-2 py-1">{font}</li>)}
+        </ul>
+      </div>
+      <div id="chevron" class="">
+        <ChevronDown />
+      </div>
+    </div>
+    <hr class="transform: rotate-90deg bg-black" />
+    <div class="">Mode</div>
+  </div>
 </nav>
+
+<script>
+const fontBtn = document.getElementById('font-btn');
+const chevron = document.getElementById('chevron');
+const fontList = document.getElementById('font-list');
+
+fontBtn?.addEventListener('click', () => {
+    fontList?.classList.toggle('hidden');
+    chevron?.classList.toggle('rotate-180');
+})
+
+</script>
