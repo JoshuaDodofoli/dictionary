@@ -4,12 +4,12 @@ import ChevronDown from "./icons/Chevron-down.astro";
 
 const fonts = ["Serif", "Mono", "Sans-serif"];
 ---
-
-<nav class="w-full flex items-center justify-between p-4">
-  <div class="">
+<div class="fixed w-full top-0 left-0 right-0">
+    <nav class="w-full flex items-center justify-between px-4 h-24 max-w-4xl mx-auto">
+        <div class="">
     <Book />
   </div>
-
+  
   <div class="flex gap-2">
     <div id="font-btn"
       class="flex relative px-2 py-1 items-center gap-1 cursor-pointer"
@@ -17,32 +17,33 @@ const fonts = ["Serif", "Mono", "Sans-serif"];
       <div class="w-18">
         <span class="">Serif</span>
         <ul id="font-list"
-          class="absolute w-full opacity-0 -translate-x-2 mt-2 gap-1 flex flex-col"
+        class="absolute w-full opacity-0 -translate-x-2 mt-2 gap-1 flex flex-col"
         >
-          {fonts.map((font) => <li id="font-item" class="bg-black text-white px-2 py-1">{font}</li>)}
-        </ul>
+        {fonts.map((font) => <li id="font-item" class="bg-black text-white px-2 py-1">{font}</li>)}
+    </ul>
       </div>
       <div id="chevron" class="">
         <ChevronDown />
       </div>
     </div>
-    <hr class="transform: rotate-90deg bg-black" />
+      <hr class="h-6 w-0.5 bg-black/30 border-none" />
     <div class="">Mode</div>
-  </div>
+</div>
 </nav>
+</div>
 
 <script>
-import { animate } from "motion";
-
-const fontBtn = document.getElementById('font-btn');
-const chevron = document.getElementById('chevron');
+    import { animate } from "motion";
+    
+    const fontBtn = document.getElementById('font-btn');
+    const chevron = document.getElementById('chevron');
 const fontList = document.getElementById('font-list');
 
 let isOpen = false;
 
 fontBtn?.addEventListener('click', () => {
     isOpen = !isOpen;
-
+    
     if (isOpen) {
         fontList?.classList.remove('hidden');
         animate(fontList, { opacity: [0, 1], y: [-20, 0] });

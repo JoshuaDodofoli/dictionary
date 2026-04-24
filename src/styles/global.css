@@ -7,3 +7,7 @@
 
 }
 
+
+p {
+    font-size: clamp(1rem, 0.34vw + 14px, 1.5rem);
+}
