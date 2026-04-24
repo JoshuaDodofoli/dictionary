@@ -17,9 +17,9 @@ const fonts = ["Serif", "Mono", "Sans-serif"];
       <div class="w-18">
         <span class="">Serif</span>
         <ul id="font-list"
-          class="absolute w-full -translate-x-2 mt-2 gap-1 flex flex-col"
+          class="absolute w-full opacity-0 -translate-x-2 mt-2 gap-1 flex flex-col"
         >
-          {fonts.map((font) => <li class="bg-black text-white px-2 py-1">{font}</li>)}
+          {fonts.map((font) => <li id="font-item" class="bg-black text-white px-2 py-1">{font}</li>)}
         </ul>
       </div>
       <div id="chevron" class="">
@@ -32,13 +32,25 @@ const fonts = ["Serif", "Mono", "Sans-serif"];
 </nav>
 
 <script>
+import { animate } from "motion";
+
 const fontBtn = document.getElementById('font-btn');
 const chevron = document.getElementById('chevron');
 const fontList = document.getElementById('font-list');
 
+let isOpen = false;
+
 fontBtn?.addEventListener('click', () => {
-    fontList?.classList.toggle('hidden');
-    chevron?.classList.toggle('rotate-180');
+    isOpen = !isOpen;
+
+    if (isOpen) {
+        fontList?.classList.remove('hidden');
+        animate(fontList, { opacity: [0, 1], y: [-20, 0] });
+    } else {
+        animate(fontList, { opacity: [1, 0], y: [0, -20] });
+    }
+    animate(chevron, { rotate: isOpen ? 180 : 0 });
 })
+
 
 </script>
