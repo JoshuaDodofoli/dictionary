@@ -1,13 +1,63 @@
 ---
 import PrimaryLayout from "../layouts/PrimaryLayout.astro";
+import Search from "../components/icons/Search.astro";
+import Play from "../components/icons/Play.astro";
 ---
 
 <PrimaryLayout>
-  <h1 class="text-4xl font-bold mb-4">Welcome to Astro!</h1>
-  <p class="text-lg mb-6">
-    This is your new Astro project. Start building something amazing!
-  </p>
-  <a href="/about" class="text-blue-500 hover:underline"
-    >Learn more about Astro</a
-  >
+  <section class="mt-28 md:mt-32 w-full">
+    <form action="" id="search-form" class="">
+      <div class="relative w-full">
+        <input
+          type="text"
+          placeholder="Search"
+          class="w-full p-3 pr-14 rounded-full border"
+        />
+        <div
+          class="absolute right-2 top-1/2 -translate-y-1/2 p-2 size-10 rounded-full flex items-center justify-center cursor-pointer"
+        >
+          <Search />
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <section class="w-full mt-8">
+    <div class="flex items-center justify-between">
+      <div class="flex flex-col gap-2">
+        <h1 class="text-4xl font-semibold">Random</h1>
+        <span class="">Random text</span>
+      </div>
+      <div
+        class="p-3 border size-10 rounded-full flex items-center justify-center cursor-pointer"
+      >
+        <Play />
+      </div>
+    </div>
+  </section>
+
+  <section class="w-full mt-8">
+    <div class="flex items-center gap-4">
+      <span>Type</span>
+      <hr class="flex-1 border-t border-gray-400" />
+    </div>
+
+    <div class="">
+      <span>Meaning</span>
+      <ul>
+        <li>Lorem, ipsum dolor.</li>
+        <li>Lorem, ipsum dolor.</li>
+        <li>Lorem, ipsum dolor.</li>
+      </ul>
+    </div>
+  </section>
+
+
 </PrimaryLayout>
+
+<script>
+  const searchForm = document.getElementById("search-form");
+  searchForm?.addEventListener("click", (e) => {
+    e.stopPropagation();
+  });
+</script>
