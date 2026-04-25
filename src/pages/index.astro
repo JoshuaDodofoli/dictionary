@@ -5,7 +5,7 @@ import Play from "../components/icons/Play.astro";
 ---
 
 <PrimaryLayout>
-  <section class="mt-28 md:mt-32 w-full">
+  <section class="mt-28 md:mt-32 w-full" id="">
     <form action="" id="search-form" class="">
       <div class="relative w-full">
         <input
@@ -27,7 +27,7 @@ import Play from "../components/icons/Play.astro";
     <div class="flex items-center justify-between">
       <div class="flex flex-col gap-2">
         <h1 id="word-title" class="text-4xl font-semibold">Random</h1>
-        <span class="">Random text</span>
+        <span id="word-phonetic" class="">Random text</span>
       </div>
       <div
         class="p-3 border size-10 rounded-full flex items-center justify-center cursor-pointer"
@@ -37,7 +37,7 @@ import Play from "../components/icons/Play.astro";
     </div>
   </section>
 
-  <section class="w-full mt-12">
+  <section id="meanings-container" class="w-full mt-12">
     <div class="flex items-center gap-4">
       <span>Type</span>
       <hr class="flex-1 border-t border-gray-400" />
