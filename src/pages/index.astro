@@ -11,13 +11,14 @@ import Play from "../components/icons/Play.astro";
         <input
           type="text"
           placeholder="Search"
+          value=""
           class="w-full p-3 pr-14 rounded-full border"
         />
-        <div
+        <button type="submit"
           class="absolute right-2 top-1/2 -translate-y-1/2 p-2 size-10 rounded-full flex items-center justify-center cursor-pointer"
         >
           <Search />
-        </div>
+        </button>
       </div>
     </form>
   </section>
@@ -25,7 +26,7 @@ import Play from "../components/icons/Play.astro";
   <section class="w-full mt-8">
     <div class="flex items-center justify-between">
       <div class="flex flex-col gap-2">
-        <h1 class="text-4xl font-semibold">Random</h1>
+        <h1 id="word-title" class="text-4xl font-semibold">Random</h1>
         <span class="">Random text</span>
       </div>
       <div
@@ -36,19 +37,28 @@ import Play from "../components/icons/Play.astro";
     </div>
   </section>
 
-  <section class="w-full mt-8">
+  <section class="w-full mt-12">
     <div class="flex items-center gap-4">
       <span>Type</span>
       <hr class="flex-1 border-t border-gray-400" />
     </div>
 
-    <div class="">
-      <span>Meaning</span>
-      <ul>
+    <div class="mt-8">
+      <span class="text-gray-400">Meaning</span>
+      <ul class="indent-6 list-disc space-y-2 mt-2">
         <li>Lorem, ipsum dolor.</li>
         <li>Lorem, ipsum dolor.</li>
         <li>Lorem, ipsum dolor.</li>
       </ul>
+    </div>
+
+     <div class="mt-8">
+      <span class="text-gray-400">Synonyms</span>
+      <div class="indent-6 list-disc space-y-2 mt-2">
+        <span>lorem</span>
+        <span>lorem</span>
+        <span>lorem</span>
+      </div>
     </div>
   </section>
 
@@ -56,8 +66,18 @@ import Play from "../components/icons/Play.astro";
 </PrimaryLayout>
 
 <script>
-  const searchForm = document.getElementById("search-form");
-  searchForm?.addEventListener("click", (e) => {
-    e.stopPropagation();
-  });
+  const searchForm = document.getElementById("search-form") as HTMLFormElement;
+  const wordTitle = document.getElementById("word-title") as HTMLHeadingElement;
+  const input = searchForm.querySelector("input") as HTMLInputElement;  
+
+  searchForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const value = input.value.trim();
+    if (!value) return;
+
+    if (wordTitle) wordTitle.textContent = value;
+  })
+
+  
 </script>
