@@ -4,7 +4,7 @@ import ChevronDown from "./icons/Chevron-down.astro";
 
 const fonts = ["Serif", "Mono", "Sans-serif"];
 ---
-<div class="fixed w-full top-0 left-0 right-0">
+<div class="fixed w-full top-0 left-0 right-0 z-60">
     <nav class="w-full flex items-center justify-between px-4 h-24 max-w-2xl mx-auto">
         <div class="">
     <Book />
@@ -19,7 +19,7 @@ const fonts = ["Serif", "Mono", "Sans-serif"];
         <ul id="font-list"
         class="absolute w-full scale-0 origin-top -translate-x-2 mt-2 gap-1 flex flex-col"
         >
-        {fonts.map((font) => <li id="font-item" class="bg-black text-white rounded-full text-xs px-2 py-1">{font}</li>)}
+        {fonts.map((font) => <li id="font-item" class="bg-black z-60 text-white rounded-full text-xs px-2 py-1">{font}</li>)}
     </ul>
       </div>
       <div id="chevron" class="">

@@ -41,84 +41,104 @@ import Play from "../components/icons/Play.astro";
   <section id="meanings-container" class="w-full mt-12"></section>
 </PrimaryLayout>
 
+
 <script>
+  // 1. Selectors (Keep these at the top)
   const searchForm = document.getElementById("search-form") as HTMLFormElement;
-  const wordTitle = document.getElementById("word-title") as HTMLHeadingElement;
   const input = searchForm.querySelector("input") as HTMLInputElement;
   const resultSection = document.getElementById(
     "result-section",
   ) as HTMLDivElement;
-  const wordPhonetic = resultSection.querySelector("#word-phonetic") as HTMLSpanElement;
+  const wordTitle = document.getElementById("word-title") as HTMLHeadingElement;
+  const wordPhonetic = document.getElementById(
+    "word-phonetic",
+  ) as HTMLSpanElement;
   const meaningsContainer = document.getElementById(
     "meanings-container",
   ) as HTMLDivElement;
 
+  // 2. Main Event Listener
   searchForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-
     const value = input.value.trim();
     if (!value) return;
-
-    // if (wordTitle) wordTitle.textContent = value;
 
     try {
       const response = await fetch(
         `https://api.dictionaryapi.dev/api/v2/entries/en/${value}`,
       );
-      if (!response.ok) throw new Error("Failed to fetch word data");
+
+      if (!response.ok) {
+        handleError("Word not found");
+        return;
+      }
 
       const data = await response.json();
       displayResult(data[0]);
-      console.log(data);
     } catch (error) {
-      console.error(error);
-      alert("Oops! Could not find that word.");
-    }
-
-    function displayResult(data: any) {
-      if (!resultSection || !wordTitle || !meaningsContainer) return;
-
-      resultSection.style.display = "block";
-      wordTitle.textContent = data.word;
-      wordPhonetic.textContent = data.phonetic || "";
-
-
-      meaningsContainer.innerHTML = data.meanings.map((meaning: any) => {
-        return `
-           <div class="flex items-center gap-4">
-      <span>${meaning.partOfSpeech}</span>
-      <hr class="flex-1 border-t border-gray-400" />
-    </div>
-
-    <div class="mt-8">
-      <span class="text-gray-400">Meaning</span>
-      <ul class="indent-6 list-disc space-y-2 mt-2">
-       ${meaning.definitions.slice(0, 5).map(
-         (def: any) =>
-           `<li>${def.definition}</li>
-        `,
-       ).join("")}
-      </ul>
-    </div>
-
-    ${
-      meaning.synonyms && meaning.synonyms.length > 0
-        ? `
-     <div class="mt-8">
-      <span class="text-gray-400">Synonyms</span>
-      <div class="indent-6 list-disc space-y-2 mt-2">
-        ${meaning.synonyms.slice(0, 3).map(
-          (syn: string) =>
-            `<span class=" bg-gray-200 px-2 py-1 rounded-full text-sm mt-2">${syn}</span>
-          `,
-        ).join("")}
-      </div>
-    </div>
-    `
-        : ""
-    }
-        `;
-      });
+      handleError("Network error or invalid word");
     }
   });
+
+  // 3. UI Logic Functions
+  function displayResult(data: any) {
+    // Reset and Show
+    resultSection.classList.remove("hidden");
+    resultSection.style.display = "block";
+    meaningsContainer.innerHTML = "";
+
+    wordTitle.textContent = data.word;
+    wordPhonetic.textContent =
+      data.phonetic || data.phonetics?.find((p: any) => p.text)?.text || "";
+
+    // Build Meanings
+    const htmlContent = data.meanings.map(renderMeaningBlock).join("");
+    meaningsContainer.innerHTML = htmlContent;
+  }
+
+  // 4. Component-like Templates (Cleaner Mapping)
+  function renderMeaningBlock(meaning: any) {
+    const definitions = meaning.definitions
+      .slice(0, 5)
+      .map((def: any) => `<li>${def.definition}</li>`)
+      .join("");
+
+    const synonyms =
+      meaning.synonyms?.length > 0
+        ? `
+        <div class="mt-8 flex gap-4 items-center">
+          <span class="text-gray-400">Synonyms</span>
+          <div class="flex flex-wrap gap-2">
+            ${meaning.synonyms
+              .slice(0, 3)
+              .map(
+                (s: string) =>
+                  `<span class="text-purple-600 font-bold">${s}</span>`,
+              )
+              .join("")}
+          </div>
+        </div>`
+        : "";
+
+    return `
+      <div class="mb-12">
+        <div class="flex items-center gap-4">
+          <span class="italic font-bold text-lg">${meaning.partOfSpeech}</span>
+          <hr class="flex-1 border-t border-gray-400" />
+        </div>
+        <div class="mt-8">
+          <p class="text-gray-400">Meaning</p>
+          <ul class="list-disc ml-6 space-y-2 mt-4 marker:text-purple-500">
+            ${definitions}
+          </ul>
+        </div>
+        ${synonyms}
+      </div>
+    `;
+  }
+
+  function handleError(msg: string) {
+    resultSection.style.display = "none";
+    meaningsContainer.innerHTML = `<p class="text-center mt-10 text-red-500">${msg}</p>`;
+  }
 </script>
