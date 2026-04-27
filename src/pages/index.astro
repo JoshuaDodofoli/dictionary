@@ -30,7 +30,7 @@ import Play from "../components/icons/Play.astro";
         <h1 id="word-title" class="text-4xl font-semibold">Random</h1>
         <span id="word-phonetic" class="">Random text</span>
       </div>
-      <div
+      <div id="play-phonetic"
         class="p-3 border size-10 rounded-full flex items-center justify-center cursor-pointer"
       >
         <Play />
@@ -43,7 +43,8 @@ import Play from "../components/icons/Play.astro";
 
 
 <script>
-  // 1. Selectors (Keep these at the top)
+  import { Howl } from "howler";
+
   const searchForm = document.getElementById("search-form") as HTMLFormElement;
   const input = searchForm.querySelector("input") as HTMLInputElement;
   const resultSection = document.getElementById(
@@ -56,6 +57,8 @@ import Play from "../components/icons/Play.astro";
   const meaningsContainer = document.getElementById(
     "meanings-container",
   ) as HTMLDivElement;
+  const playPhonetic = document.getElementById("play-phonetic") as HTMLDivElement;
+  let audioUrl = "";
 
   // 2. Main Event Listener
   searchForm.addEventListener("submit", async (e) => {
@@ -80,9 +83,7 @@ import Play from "../components/icons/Play.astro";
     }
   });
 
-  // 3. UI Logic Functions
   function displayResult(data: any) {
-    // Reset and Show
     resultSection.classList.remove("hidden");
     resultSection.style.display = "block";
     meaningsContainer.innerHTML = "";
@@ -90,13 +91,19 @@ import Play from "../components/icons/Play.astro";
     wordTitle.textContent = data.word;
     wordPhonetic.textContent =
       data.phonetic || data.phonetics?.find((p: any) => p.text)?.text || "";
+      audioUrl = data.phonetics?.find((p: any) => p.audio)?.audio || "";
 
-    // Build Meanings
+      playPhonetic.onclick = () => {
+        if (audioUrl) {
+          const sound = new Howl({ src: [audioUrl] });
+          sound.play();
+        }
+      };
+
     const htmlContent = data.meanings.map(renderMeaningBlock).join("");
     meaningsContainer.innerHTML = htmlContent;
   }
 
-  // 4. Component-like Templates (Cleaner Mapping)
   function renderMeaningBlock(meaning: any) {
     const definitions = meaning.definitions
       .slice(0, 5)

@@ -17,5 +17,8 @@
     "howler": "^2.2.4",
     "motion": "^12.38.0",
     "tailwindcss": "^4.2.4"
+  },
+  "devDependencies": {
+    "@types/howler": "^2.2.12"
   }
 }
