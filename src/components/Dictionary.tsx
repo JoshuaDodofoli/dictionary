@@ -1,24 +1,34 @@
-import { useState, type FormEvent } from 'react';
+import { useState, useEffect, type FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import type { Definition, DictionaryEntry, Meaning } from '../lib/Interface';
+import { Howl } from 'howler';
 
 export default function Dictionary() {
   const [word, setWord] = useState<string>('');
-  // Set the state type to our interface or null
   const [data, setData] = useState<DictionaryEntry | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [sound, setSound] = useState<Howl | null>(null);
+
+  useEffect(() => {
+    if (data?.phonetics.find(p => p.audio)?.audio) {
+      const audioUrl = data.phonetics.find(p => p.audio)?.audio || '';
+      const newSound = new Howl({
+        src: [audioUrl],
+        html5: true,
+      });
+      setSound(newSound);
+    }
+  }, [data]);
 
   const handleSearch = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!word.trim()) return;
-    
+
     setLoading(true);
     try {
       const resp = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
       const result = await resp.json();
-      
-      // If the API returns a 404, 'result' is usually an object with a message, 
-      // not an array of entries.
+
       if (resp.ok && Array.isArray(result)) {
         setData(result[0]);
       } else {
@@ -32,8 +42,14 @@ export default function Dictionary() {
     }
   };
 
+  const handlePhonetic = () => {
+    if (sound) {
+      sound.play();
+    }
+  };
+
   return (
-    <div className="w-full max-w-2xl mx-auto mt-28 md:mt-32">
+    <div className="w-full max-w-2xl mx-auto my-28 md:my-32">
       <form onSubmit={handleSearch} className="relative w-full">
         <input
           type="text"
@@ -42,12 +58,27 @@ export default function Dictionary() {
           value={word}
           onChange={(e) => setWord(e.target.value)}
         />
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           disabled={loading}
           className="absolute right-2 top-1/2 -translate-y-1/2 p-2 size-10 bg-purple-100 rounded-full text-purple-600 disabled:opacity-50"
         >
-          {loading ? '...' : '🔍'}
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="m21 21-4.34-4.34"></path>
+            <circle cx="11" cy="11" r="8"></circle>
+          </svg>
+
         </button>
       </form>
 
@@ -64,18 +95,29 @@ export default function Dictionary() {
             <div className="flex justify-between items-center">
               <div>
                 <h1 className="text-5xl font-bold capitalize">{data.word}</h1>
-                {/* Fallback for phonetic string if it's missing */}
                 <p className="text-purple-500 text-xl mt-2">
-                   {data.phonetic || data.phonetics.find(p => p.text)?.text}
+                  {data.phonetic || data.phonetics.find(p => p.text)?.text}
                 </p>
               </div>
-              <button className="size-16 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-2xl hover:bg-purple-600 hover:text-white transition-colors">
-                ▶
+              <button onClick={handlePhonetic} className="size-10 cursor-pointer rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-2xl hover:bg-purple-600 hover:text-white transition-colors">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z" />
+                </svg>
               </button>
             </div>
 
             {data.meanings.map((meaning: Meaning, idx: number) => (
-              <motion.div 
+              <motion.div
                 key={`${data.word}-${meaning.partOfSpeech}-${idx}`}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -86,7 +128,7 @@ export default function Dictionary() {
                   <span className="italic font-bold text-lg">{meaning.partOfSpeech}</span>
                   <hr className="flex-1 border-t border-gray-200" />
                 </div>
-                
+
                 <div className="mt-6">
                   <h3 className="text-gray-400">Meaning</h3>
                   <ul className="list-disc ml-6 mt-4 space-y-3 marker:text-purple-500">
